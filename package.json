@@ -1,0 +1,61 @@
+{
+  "name": "dsh-sidebar-expand",
+  "version": "0.1.0",
+  "description": "DSH sidebar bundle: conversation marks, active-session bell, sidebar shortcuts and back-to-chat, installed once with every component switchable on the Plugins page.",
+  "private": false,
+  "license": "MIT",
+  "author": "DEVbyQIN",
+  "type": "module",
+  "icon": "./icon.svg",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DEVbyQIN/dsh-sidebar-expand.git"
+  },
+  "homepage": "https://github.com/DEVbyQIN/dsh-sidebar-expand",
+  "bugs": {
+    "url": "https://github.com/DEVbyQIN/dsh-sidebar-expand/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "bundle",
+    "sidebar",
+    "sidebar-marks",
+    "active-sessions"
+  ],
+  "engines": {
+    "node": "^22.19.0 || >=24"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "README.md",
+    "README_EN.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "dependencies": {
+    "dsh-active-sessions": "0.1.1",
+    "dsh-back-to-chat": "0.1.1",
+    "dsh-sidebar-marks": "0.1.1",
+    "dsh-sidebar-shortcuts": "0.1.0"
+  },
+  "scripts": {
+    "test": "node --test test/verify.mjs",
+    "pack:check": "npm pack --dry-run",
+    "publish:github": "node tools/publish-to-github.mjs"
+  }
+}

@@ -1,0 +1,52 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: node --test (${{ matrix.os }} / node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # 本仓库只有 bundle 清单：直接在清单与 patch 上跑自洽断言。
+      - name: Self test
+        run: node --test test/verify.mjs
+
+  manifest:
+    name: package manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Bundle manifest is installable
+        shell: bash
+        run: |
+          node -e "
+          const fs = require('node:fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          if (!pkg.dsh || !pkg.dsh.bundle || pkg.dsh.bundle.patch !== './cordis.patch.yml') {
+            console.error('dsh.bundle.patch must be ./cordis.patch.yml'); process.exit(1);
+          }
+          if (pkg.dsh.client) { console.error('a bundle-only package must not declare dsh.client'); process.exit(1); }
+          for (const [name, version] of Object.entries(pkg.dependencies || {})) {
+            if (/^[\\^~*]|^[a-z]+:/.test(version)) { console.error('unpinned dependency ' + name + '@' + version); process.exit(1); }
+          }
+          const patch = fs.readFileSync(pkg.dsh.bundle.patch, 'utf8');
+          if (!patch.includes('- insert:')) { console.error('patch must insert component rows'); process.exit(1); }
+          console.log('bundle manifest ok');
+          "
+      - name: npm pack contents
+        run: npm pack --dry-run

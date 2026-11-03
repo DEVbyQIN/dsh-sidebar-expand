@@ -1,0 +1,26 @@
+# dsh-sidebar-expand — meta bundle layer.
+#
+# This package is only a bundle: it carries no plugin code of its own. Its patch
+# inserts the four sidebar component rows, and every component stays an
+# independent Loader entry, so the Plugins page shows one switch per component
+# (and a Configure control for those that register a row page).
+#
+# Each `name` is the component package's bare name: the client-module registry
+# attaches a package's browser half (`dsh.client`) to the Loader row whose
+# specifier is that bare name.
+#
+# Keep the row ids identical to the component packages' own ids. The per-row
+# switch writes `disabled` overrides into the profile's `cordis.patch.yml`
+# keyed by these ids, so a stable id preserves a user's earlier choice.
+#
+# Components are enabled by default: installing the bundle means "I want the
+# whole set". Turning one off is a one-click switch, not an uninstall.
+- insert:
+    - id: sidebar-marks
+      name: dsh-sidebar-marks
+    - id: active-sessions
+      name: dsh-active-sessions
+    - id: dsh-sidebar-shortcuts
+      name: dsh-sidebar-shortcuts
+    - id: dsh-back-to-chat
+      name: dsh-back-to-chat

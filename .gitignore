@@ -1,0 +1,8 @@
+# 工作区临时产物
+.tmp/
+node_modules/
+*.log
+.DS_Store
+
+# 真实界面检查的截图里会拍到本机真实的会话标题，不要提交
+docs/real-ui*.png
